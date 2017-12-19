@@ -1,3 +1,4 @@
+import React from 'react';
 import dva from 'dva';
 import dynamic from 'dva/dynamic';
 import { Router, Route, Switch } from 'dva/router';

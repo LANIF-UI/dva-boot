@@ -1,27 +1,26 @@
-import React from 'react';
-import dynamic from 'dva/dynamic';
-import assign from 'object-assign';
 import {createRoutes} from '../utils/core';
 import BaseLayout from '../layouts/BasicLayout';
-import NotFound from '../components/Pages/404';
+import UserLayout from '../layouts/UserLayout';
+import NotFound from './Pages/404';
 import Login from './Login';
 import Home from './Home';
 
 const routesConfig = (app) => ([
   {
-    path: '/',
-    title: '基本布局',
-    models: ['.login/model'],
-    component: BaseLayout,
-    indexPath: '/home',
+    path: '/user',
+    title: '登录',
+    component: UserLayout,
     childRoutes: [
-      Home(app),
-      NotFound
+      Login(app)
     ]
   }, {
-    path: '/login',
-    title: '登录',
-    component: Login(app),
+    path: '/',
+    title: '系统中心',
+    component: BaseLayout,
+    childRoutes: [
+      Home(app),
+      NotFound()
+    ]
   }
 ]);
 

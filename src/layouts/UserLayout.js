@@ -6,7 +6,7 @@ import { Route, Redirect, Switch } from 'dva/router';
 import {createRoutes} from '../utils/core';
 
 @connect()
-export default class BasicLayout extends React.PureComponent {
+export default class UserLayout extends React.PureComponent {
   render() {
     const {routerData, match, location, dispatch} = this.props;
     const {title, childRoutes} = routerData;
