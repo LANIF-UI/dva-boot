@@ -1,29 +1,28 @@
 import React from 'react';
-import { Router, Route, Switch } from 'dva/router';
 import dynamic from 'dva/dynamic';
-import { getRouterData } from './common/nav';
+import assign from 'object-assign';
+import {createRoutes} from '../utils/core';
+import BaseLayout from '../layouts/BasicLayout';
+import NotFound from '../components/Pages/404';
+import Login from './Login';
+import Home from './Home';
 
-dynamic.setDefaultLoadingComponent(() => {
-  console.log("loading...")
-  return null;
-});
+const routesConfig = (app) => ([
+  {
+    path: '/',
+    title: '基本布局',
+    models: ['.login/model'],
+    component: BaseLayout,
+    indexPath: '/home',
+    childRoutes: [
+      Home(app),
+      NotFound
+    ]
+  }, {
+    path: '/login',
+    title: '登录',
+    component: Login(app),
+  }
+]);
 
-function RouterConfig({ history, app }) {
-  const routerData = getRouterData(app);
-  const BasicLayout = routerData['/'].component;
-
-  const passProps = {
-    app,
-    routerData,
-  };
-
-  return (
-    <Router history={history}>
-      <Switch>
-        <Route path="/" render={props => <BasicLayout {...props} {...passProps} />} />
-      </Switch>
-    </Router>
-  );
-}
-
-export default RouterConfig;
+export default app => createRoutes(app, routesConfig);

@@ -4,56 +4,20 @@ import DocumentTitle from 'react-document-title';
 import { connect } from 'dva';
 import { Route, Redirect, Switch } from 'dva/router';
 import NotFound from '../routes/Exception/404';
-import { getRoutes } from '../utils/utils';
+import {createRoutes} from '../utils/core';
 
-class BasicLayout extends React.PureComponent {
-  static childContextTypes = {
-    location: PropTypes.object,
-    breadcrumbNameMap: PropTypes.object,
-  }
-  getChildContext() {
-    const { location, routerData } = this.props;
-    return {
-      location,
-      breadcrumbNameMap: routerData,
-    }
-  }
-  getPageTitle() {
-    const { routerData, location } = this.props;
-    const { pathname } = location;
-    let title = 'dva boot';
-    if (routerData[pathname] && routerData[pathname].name) {
-      title = `${routerData[pathname].name} - ${title}`;
-    }
-    return title;
-  }
+@connect();
+export default class BasicLayout extends React.PureComponent {
   render() {
-    const {
-      currentUser, collapsed, fetchingNotices, notices, routerData, match, location, dispatch,
-    } = this.props;
+    const {routerData, match, location, dispatch} = this.props;
+    const {title, childRoutes} = routerData;
 
     return (
-      <DocumentTitle title={this.getPageTitle()}>
+      <DocumentTitle title={title}>
         <Switch>
-          {
-            getRoutes(match.path, routerData).map(path =>
-              (
-                <Route
-                  key={`${match.path}${path}`}
-                  path={`${match.path}${path}`}
-                  component={routerData[`${match.path}${path}`].component}
-                />
-              )
-            )
-          }
-          <Redirect exact from="/" to="/dashboard" />
-          <Route component={NotFound} />
+          {childRoutes}
         </Switch>
       </DocumentTitle>
     );
   }
 }
-
-export default connect(state => ({
-  notices: state.global.notices,
-}))(BasicLayout);
