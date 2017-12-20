@@ -4,7 +4,7 @@ import dynamic from 'dva/dynamic';
 import { Router } from 'dva/router';
 import createHistory from 'history/createBrowserHistory';
 import createRoutes from './routes';
-import './index.less';
+import './styles/index.less';
 
 // 0. 加载中效果
 dynamic.setDefaultLoadingComponent(() => {
