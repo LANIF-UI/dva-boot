@@ -11,6 +11,13 @@
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject"
   },
+  "proxy": {
+    "/api": {
+      "target": "http://locaihost:8888",
+      "changeOrigin": true,
+      "pathRewrite": { "^/api" : "" }
+    }
+  },
   "dependencies": {
     "classnames": "^2.2.5",
     "dva": "^2.1.0",
