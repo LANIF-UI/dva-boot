@@ -1,6 +1,3 @@
-import React from 'react';
-import dynamic from 'dva/dynamic';
-import { Route } from 'dva/router';
 import { createRoute } from '../../utils/core';
 import NotFound from '../../components/Pages/404'
 

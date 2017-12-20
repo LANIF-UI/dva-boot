@@ -1,9 +1,8 @@
 import React from 'react';
 import dva from 'dva';
 import dynamic from 'dva/dynamic';
-import { Router, Route, Switch } from 'dva/router';
+import { Router } from 'dva/router';
 import createHistory from 'history/createBrowserHistory';
-import BaseLayout from './layouts/BasicLayout';
 import createRoutes from './routes';
 import './index.less';
 

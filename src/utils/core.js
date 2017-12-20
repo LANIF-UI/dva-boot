@@ -1,6 +1,7 @@
 import React from 'react';
 import dynamic from 'dva/dynamic';
 import { Route, Switch, Redirect } from 'dva/router';
+import DocumentTitle from 'react-document-title';
 import assign from 'object-assign';
 /**
  * 生成动态组件
@@ -11,7 +12,7 @@ import assign from 'object-assign';
 export const dynamicWrapper = (app, models, component) => dynamic({
   app,
   models: () => models,
-  component: () => typeof component === "string" ? import(component) : component,
+  component: () => component,
 });
 
 /**
@@ -35,10 +36,14 @@ export const createRoutes = (app, routesConfig) => {
  * @param {*} routesConfig 
  */
 export const createRoute = (app, routesConfig) => {
-  const {component: Comp, path, indexRoute, ...otherProps} = routesConfig(app);
+  const {component: Comp, path, indexRoute, title, ...otherProps} = routesConfig(app);
   const routeProps = assign({
     key: path || Math.random,
-    render: props => <Comp {...props} routerData={otherProps}/>
+    render: props => (
+      <DocumentTitle title={title}>
+        <Comp routerData={otherProps} {...props} />
+      </DocumentTitle>
+    )
   }, path && {
     path: path
   });

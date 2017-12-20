@@ -1,6 +1,3 @@
-import React from 'react';
-import dynamic from 'dva/dynamic';
-import { Route } from 'dva/router';
 import {dynamicWrapper, createRoute} from '../../utils/core';
 
 const routesConfig = (app) => ({

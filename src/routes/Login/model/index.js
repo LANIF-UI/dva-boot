@@ -1,4 +1,3 @@
-import { routerRedux } from 'dva/router';
 import { } from '../service';
 
 export default {
