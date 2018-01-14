@@ -3,7 +3,6 @@ import { dynamicWrapper, createRoute } from '@/utils/core';
 const routesConfig = (app) => ({
   path: '/user/login',
   title: '用户登录',
-  indexRoute: '/user',
   component: dynamicWrapper(app, [import('./model')], import('./components')),
 });
 

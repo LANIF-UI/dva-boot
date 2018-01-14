@@ -19,7 +19,8 @@ export default class BasicLayout extends React.PureComponent {
       <div className="basic-layout">
         <nav>
           <NavLink to="/home" activeClassName="active">Home</NavLink>
-          <NavLink to="/user" activeClassName="active">User</NavLink>
+          <NavLink to="/userInfo" activeClassName="active">UserInfo</NavLink>
+          <NavLink to="/user" activeClassName="active">Logout</NavLink>
         </nav>
         <Switch>
           {childRoutes}

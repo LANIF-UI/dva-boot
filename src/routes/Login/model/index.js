@@ -10,6 +10,16 @@ export default {
     user: {},
   },
 
+  subscriptions: {
+    setup({ history, dispatch }) {
+      return history.listen(({ pathname }) => {
+        if (pathname === '/user/login') {
+          localStorage.removeItem("user");
+        }
+      });
+    },
+  },
+
   effects: {
     *login({ payload }, { call, put }) {
       const {status, message, data} = yield call(login, payload)

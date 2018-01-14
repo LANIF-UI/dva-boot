@@ -28,7 +28,9 @@ app.use(createLoading());
 // app.model(require('./models/global').default);
 
 // 4. 初始化路由
-app.router(({ history, app }) => <Router history={history}>{createRoutes(app)}</Router>);
+app.router(({ history, app }) => (
+  <Router history={history}>{createRoutes(app)}</Router>)
+);
 
 // 5. Start
 app.start('#root');
