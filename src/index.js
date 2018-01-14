@@ -2,9 +2,10 @@ import React from 'react';
 import dva from 'dva';
 import dynamic from 'dva/dynamic';
 import { Router } from 'dva/router';
+import createLoading from 'dva-loading';
 import createHistory from 'history/createBrowserHistory';
-import createRoutes from './routes';
-import './assets/styles/index.less';
+import createRoutes from '@/routes';
+import 'assets/styles/index.less';
 
 // 0. 加载中效果
 dynamic.setDefaultLoadingComponent(() => {
@@ -21,7 +22,7 @@ const app = dva({
 });
 
 // 2. 插件
-// app.use({});
+app.use(createLoading());
 
 // 3. 注册全局模型
 // app.model(require('./models/global').default);

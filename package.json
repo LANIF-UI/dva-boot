@@ -15,7 +15,9 @@
     "/api": {
       "target": "http://locaihost:8888",
       "changeOrigin": true,
-      "pathRewrite": { "^/api" : "" }
+      "pathRewrite": {
+        "^/api": ""
+      }
     }
   },
   "dependencies": {

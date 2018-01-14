@@ -1,4 +1,4 @@
-import {dynamicWrapper, createRoute} from '../../utils/core';
+import {dynamicWrapper, createRoute} from '@/utils/core';
 
 const routesConfig = (app) => ({
   path: '/home',
