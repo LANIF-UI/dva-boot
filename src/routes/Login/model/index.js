@@ -1,5 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { login } from '../service';
+import $$ from 'cmn-utils';
 
 export default {
   namespace: 'login',
@@ -14,7 +15,7 @@ export default {
     setup({ history, dispatch }) {
       return history.listen(({ pathname }) => {
         if (pathname === '/user/login') {
-          localStorage.removeItem("user");
+          $$.removeStore("user");
         }
       });
     },
@@ -24,7 +25,7 @@ export default {
     *login({ payload }, { call, put }) {
       const {status, message, data} = yield call(login, payload)
       if (status) {
-        localStorage.setItem('user', JSON.stringify(data));
+        $$.setStore('user', data);
         yield put({
           type: 'loginSuccess',
           payload: data

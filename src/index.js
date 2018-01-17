@@ -6,7 +6,6 @@ import createLoading from 'dva-loading';
 import createHistory from 'history/createBrowserHistory';
 import createRoutes from '@/routes';
 import 'assets/styles/index.less';
-
 // 0. 加载中效果
 dynamic.setDefaultLoadingComponent(() => {
   console.log("loading...")
