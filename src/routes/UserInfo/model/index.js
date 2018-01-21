@@ -1,4 +1,6 @@
-export default {
+import modelEnhance from '@/utils/modelEnhance';
+
+export default modelEnhance({
   namespace: 'userInfo',
 
   state: {
@@ -15,4 +17,4 @@ export default {
   reducers: {
     
   },
-};
+});

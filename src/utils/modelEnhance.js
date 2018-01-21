@@ -1,11 +1,43 @@
-const REQUEST = "@@DVA_REQUEST/REQUEST";
-const REQUEST_SUCCESS = "@@DVA_REQUEST/REQUEST_SUCCESS";
-const REQUEST_ERROR = "@@DVA_REQUEST/REQUEST_ERROR";
+import request from 'cmn-utils/lib/request';
+import $$ from 'cmn-utils';
 
-export default (model) => {
-  const {namespace, state, subscriptions, effects, reducers} = model;
+const REQUEST = "@request";
+const REQUEST_SUCCESS = "@request_success";
+const REQUEST_ERROR = "@request_error";
 
+async function asyncRequest(payload) {
+  if (!payload || !payload.url) throw(new Error('payload require contains url opt'));
+  /**
+   * other中可以配置 method headers data 等参数
+   */
+  const {url, ...other} = payload;
 
+  let options = {...other};
+
+  return request.send(url, options);
+}
+
+function getResponse(response) {
+  if ($$.isObject) {
+    return { status: true, data: response };
+  }
+  return { status: false };
+}
+
+export const simpleModel = {
+  namespace: $$.randomStr(4),
+  enhance: true,
+  state: {},
+  effects: {},
+  reducers: {},
+};
+
+export default (model, options={}) => {
+  const {namespace, state, subscriptions, effects, reducers, enhance} = {...simpleModel, ...model};
+
+  if (!enhance) {
+    return {namespace, state, subscriptions, effects, reducers};
+  }
   return {
     namespace,
     state,
@@ -15,18 +47,22 @@ export default (model) => {
       ...effects,
       // append new request effect
       * [REQUEST]({ payload }, { call, put }) {
-        const {status, message, data} = yield call(login, payload)
-        if (status) {
-          yield put({
-            type: 'loginSuccess',
-            payload: data
-          })
+        /**
+         * valueField: 返回结果将使用valueField字段的值来接收
+         */
+        const {valueField, ...otherPayload} = payload;
+        let response = yield call(asyncRequest, otherPayload);
+
+        if (options && $$.isFunction(options.getResponse)) {
+          response = options.getResponse(response);
         } else {
-          yield put({
-            type: 'loginError',
-            payload: {message}
-          })
+          response = getResponse(response);
         }
+        
+        yield put({
+          type: response.status ? `${REQUEST_SUCCESS}` : `${REQUEST_ERROR}`,
+          payload: { [valueField]: response }
+        });
       },
     },
   
@@ -37,13 +73,13 @@ export default (model) => {
       [REQUEST_SUCCESS](state, { payload }) {
         return {
           ...state,
-          user: payload
+          ...payload
         };
       },
       [REQUEST_ERROR](state, { payload }) {
         return {
           ...state,
-          user: payload
+          ...payload
         };
       },
     },

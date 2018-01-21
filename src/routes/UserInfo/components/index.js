@@ -3,7 +3,16 @@ import { connect } from 'dva';
 
 @connect(({userInfo}) => ({userInfo}))
 export default class UserInfo extends Component {
-
+  componentDidMount() {
+    this.props.dispatch({
+      type: 'userInfo/@request',
+      payload: {
+        url: 'http://httpbin.org/get',
+        valueField: 'httpbin'
+      }
+    });
+  }
+  
   render() {
     const {info} = this.props.userInfo;
     return (
