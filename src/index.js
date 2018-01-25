@@ -16,7 +16,7 @@ dynamic.setDefaultLoadingComponent(() => {
 const app = dva({
   history: createHistory(),
   onError(e) {
-    console.error(e);
+    console.log(e);
   },
 });
 
