@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
-    "cmn-utils": "^0.1.1",
+    "cmn-utils": "^0.1.3",
     "dva": "^2.1.0",
     "dva-loading": "^1.0.4",
     "react": "^16.2.0",

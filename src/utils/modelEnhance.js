@@ -1,5 +1,4 @@
-import request from 'cmn-utils/lib/request';
-import $$ from 'cmn-utils';
+import $$, {request} from 'cmn-utils';
 
 const REQUEST = "@request";
 const REQUEST_SUCCESS = "@request_success";

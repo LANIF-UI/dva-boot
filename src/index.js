@@ -5,7 +5,9 @@ import { Router } from 'dva/router';
 import createLoading from 'dva-loading';
 import createHistory from 'history/createBrowserHistory';
 import createRoutes from '@/routes';
+import exception from '@/utils/exception';
 import 'assets/styles/index.less';
+
 // 0. 加载中效果
 dynamic.setDefaultLoadingComponent(() => {
   console.log("loading...")
@@ -15,9 +17,7 @@ dynamic.setDefaultLoadingComponent(() => {
 // 1. 初始化
 const app = dva({
   history: createHistory(),
-  onError(e) {
-    console.log(e);
-  },
+  onError: exception,
 });
 
 // 2. 插件
