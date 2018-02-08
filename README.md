@@ -54,7 +54,7 @@ modelEnhance是对dva model层的简单包装函数，有时候我们只是想�
 
 import modelEnhance from '@/utils/modelEnhance';
 
-// 把之间的普通model传入modelEnhance即可，不用定义其它变量
+// 就是普通的dva model传入modelEnhance即可，不用定义其它变量
 export default modelEnhance({
   namespace: 'userInfo',
 });
