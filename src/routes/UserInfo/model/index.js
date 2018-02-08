@@ -1,4 +1,5 @@
 import modelEnhance from '@/utils/modelEnhance';
+import PageHelper from '@/utils/pageHelper';
 
 export default modelEnhance({
   namespace: 'userInfo',
@@ -7,7 +8,8 @@ export default modelEnhance({
     info: {
       sex: '男',
       age: '18',
-    }
+    },
+    pageData: PageHelper.create()
   },
 
   effects: {
