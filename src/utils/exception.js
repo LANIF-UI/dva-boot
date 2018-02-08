@@ -2,7 +2,7 @@
 const globalException = (err, dispatch) => {
   const errName = err.name;
   if (errName === 'RequestError') {
-    alert(err.text);
+    console.log(err); 
   } else {
     console.error(err);
   }

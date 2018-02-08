@@ -39,10 +39,10 @@ export default class UserInfo extends Component {
         <div>性别：{info.sex}</div>
         <div>年龄：{info.age}</div>
 
-        <h2>异步数据</h2>
+        <h2>异步数据（modelEnhance）</h2>
         <div>{JSON.stringify(httpbin)}</div>
 
-        <h2>分页测试</h2>
+        <h2>分页助手</h2>
         <table>
           {/* {pageData.list.map(item => (
 

@@ -2,6 +2,15 @@
 import fetchMock from 'fetch-mock';
 import $$ from 'cmn-utils';
 
+/**
+ * 模拟延时请求
+ * @param {any} response 模拟响应数据
+ * @param {number} time 延时多少毫秒，省略这个省数将会生成100ms内的一个延时
+ */
+const delay = (response, time) => {
+  return () => $$.delay(time || Math.random() * 100).then(() => response)
+}
+
 export default (...mocks) => {
   /**
    * 配置如果没拦截到直接走原生的fetch方法
@@ -9,12 +18,13 @@ export default (...mocks) => {
   fetchMock.config = {
     ...fetchMock.config, 
     fallbackToNetwork: true,
+    warnOnFallback: false
   }
 
   mocks.forEach(mockFile => {
     let mockAPIs = {};
     if ($$.isFunction(mockFile)) {
-      mockAPIs = mockFile(fetchMock);
+      mockAPIs = mockFile(fetchMock, delay);
     } else if ($$.isObject(mockFile)) {
       mockAPIs = mockFile;
     } else {
