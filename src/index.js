@@ -36,5 +36,5 @@ app.start('#root');
 
 // 6. Developer mock data
 if (process.env.NODE_ENV === 'development') {
-  require('./mocks');
+  require('./__mocks__');
 }
