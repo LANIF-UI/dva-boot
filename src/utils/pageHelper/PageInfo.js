@@ -95,7 +95,7 @@ export default class PageInfo {
     return this;
   }
 
-  async getList(url, options) {
+  send = (url, options) => {
     const { pageNum, pageSize, filters, sorts } = this;
     let data = { pageNum, pageSize, filters, sorts };
 

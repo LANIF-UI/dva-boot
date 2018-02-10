@@ -1,33 +1,29 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import $$ from 'cmn-utils';
 
 @connect(({userInfo}) => ({userInfo}))
 export default class UserInfo extends Component {
   componentDidMount() {
-    const {dispatch, pageData} = this.props;
+    const {dispatch, userInfo} = this.props;
+    const {pageData} = userInfo;
 
     dispatch({
       type: 'userInfo/@request',
       payload: {
+        valueField: 'httpbin',
         url: 'http://httpbin.org/get',
         method: 'GET', // default 'POST'
-        valueField: 'httpbin'
       }
     });
 
-    $$.get('/api/getUserInfo').then(resp => console.log(JSON.stringify(resp)));
-
-    $$.post('/api/getUsers').then(resp => console.log(JSON.stringify(resp)));
-
-    // dispatch({
-    //   type: 'userInfo/@request',
-    //   pageInfo: pageData.startPage(1, 10).filter({name: 'jonn'}),
-    //   payload: {
-    //     url: 'http://httpbin.org/post',
-    //     valueField: 'pageData',
-    //   }
-    // });
+    dispatch({
+      type: 'userInfo/@request',
+      payload: {
+        valueField: 'pageData',
+        url: 'http://httpbin.org/post',
+        pageInfo: pageData.startPage(1, 10).filter({name: 'jonn'}),
+      }
+    });
   }
   
   render() {

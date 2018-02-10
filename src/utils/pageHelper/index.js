@@ -4,13 +4,8 @@ import PageInfo from './PageInfo';
  * 通用分页助手
  */
 export default class　PageHelper {
-  config = (options) => {
-    return this;
-  }
-
   static create = () => {
     const pageInfo = new PageInfo();
-
     return pageInfo;
   }
 
@@ -29,13 +24,14 @@ export default class　PageHelper {
    *  currentPage: pageNum,
    *  showCount: pageSize
    * }))
-   */
+  
   static requestFormat(pageInfo) {
     const { pageNum, pageSize, filters, sorts } = pageInfo;
     return {
       pageNum, pageSize, filters, sorts
     }
   };
+   */
 
   /**
    * 格式化从服务端反回的数据，并置入PageInfo对象中，
@@ -47,11 +43,12 @@ export default class　PageHelper {
      总页数 totalPages;
      结果集 list;
    * @param {object} resp 
-   */
+   
   static responseFormat(resp) {
     const { size, total, totalPages, list } = resp;
     return {
       size, total, totalPages, list
     }
   }
+  */
 }
