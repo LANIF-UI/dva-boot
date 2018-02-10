@@ -1,24 +1,15 @@
 import React from 'react';
 import dva from 'dva';
-import dynamic from 'dva/dynamic';
 import { Router } from 'dva/router';
 import createLoading from 'dva-loading';
 import createHistory from 'history/createBrowserHistory';
 import createRoutes from '@/routes';
-import exception from '@/utils/exception';
 import 'assets/styles/index.less';
-
-// 0. 加载中效果
-dynamic.setDefaultLoadingComponent(() => {
-  console.log("loading...")
-  return null;
-});
+import AppConfig from './AppConfig';
 
 // 1. 初始化
-const app = dva({
-  history: createHistory(),
-  onError: exception,
-});
+const app = dva({ history: createHistory() });
+new AppConfig(app);
 
 // 2. 插件
 app.use(createLoading());
