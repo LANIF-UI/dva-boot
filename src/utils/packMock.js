@@ -1,6 +1,9 @@
 // http://www.wheresrhys.co.uk/fetch-mock/api
 import fetchMock from 'fetch-mock';
 import $$ from 'cmn-utils';
+// http://mockjs.com/
+import Mock from 'mockjs';
+const mock = Mock.mock;
 
 /**
  * 模拟延时请求
@@ -24,7 +27,7 @@ export default (...mocks) => {
   mocks.forEach(mockFile => {
     let mockAPIs = {};
     if ($$.isFunction(mockFile)) {
-      mockAPIs = mockFile(fetchMock, delay);
+      mockAPIs = mockFile(fetchMock, delay, mock);
     } else if ($$.isObject(mockFile)) {
       mockAPIs = mockFile;
     } else {
@@ -44,3 +47,5 @@ export default (...mocks) => {
     }
   })
 }
+
+export {mock};
