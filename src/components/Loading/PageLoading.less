@@ -1,0 +1,27 @@
+@base-line-height: 24px;
+@white: #000;
+@spin-duration: .7s;
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner {
+  position: fixed;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 50%;
+  width: @base-line-height;
+  height: @base-line-height;
+  border: 0.25rem solid tint(@white, 0.2);
+  border-top-color: @white;
+  animation: spin @spin-duration infinite linear;
+}
