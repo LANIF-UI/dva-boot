@@ -95,7 +95,8 @@ export default class PageInfo {
     return this;
   }
 
-  send = (url, options) => {
+  send(url, options) {
+    const self = this;
     const { pageNum, pageSize, filters, sorts } = this;
     let data = { pageNum, pageSize, filters, sorts };
 
@@ -105,11 +106,11 @@ export default class PageInfo {
     return $$.send(url, { data, ...options }).then(resp => {
       if ($$.isFunction(PageHelper.responseFormat)) {
         const { size, total, totalPages, list } = PageHelper.responseFormat(resp);
-        this.size = size;
-        this.total = total;
-        this.totalPages = totalPages;
-        this.list = list;
-        return this;
+        self.size = size;
+        self.total = total;
+        self.totalPages = totalPages;
+        self.list = list;
+        return self;
       }
     })
   }

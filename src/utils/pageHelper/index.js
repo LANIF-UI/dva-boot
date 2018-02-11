@@ -1,4 +1,5 @@
 import PageInfo from './PageInfo';
+import config from '@/config';
 
 /**
  * 通用分页助手
@@ -24,14 +25,11 @@ export default class　PageHelper {
    *  currentPage: pageNum,
    *  showCount: pageSize
    * }))
-  
+  */
   static requestFormat(pageInfo) {
-    const { pageNum, pageSize, filters, sorts } = pageInfo;
-    return {
-      pageNum, pageSize, filters, sorts
-    }
+    return config.pageHelper.requestFormat;
   };
-   */
+   
 
   /**
    * 格式化从服务端反回的数据，并置入PageInfo对象中，
@@ -43,12 +41,8 @@ export default class　PageHelper {
      总页数 totalPages;
      结果集 list;
    * @param {object} resp 
-   
-  static responseFormat(resp) {
-    const { size, total, totalPages, list } = resp;
-    return {
-      size, total, totalPages, list
-    }
-  }
   */
+  static responseFormat(resp) {
+    return config.pageHelper.responseFormat(resp);
+  }
 }

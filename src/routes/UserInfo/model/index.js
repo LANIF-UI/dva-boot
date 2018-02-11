@@ -5,10 +5,7 @@ export default modelEnhance({
   namespace: 'userInfo',
 
   state: {
-    info: {
-      sex: '男',
-      age: '18',
-    },
+    info: {},
     pageData: PageHelper.create()
   },
 
