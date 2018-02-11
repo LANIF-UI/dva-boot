@@ -1,6 +1,6 @@
-@base-line-height: 24px;
-@white: #000;
-@spin-duration: .7s;
+@base-line-height: 25px;
+@color: #000;
+@spin-duration: 1s;
 
 @keyframes spin {
   0% {
@@ -12,16 +12,26 @@
 }
 
 .loading-spinner {
-  position: fixed;
-  margin: auto;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
   border-radius: 50%;
+  animation: spin @spin-duration infinite linear;
+}
+
+.loading-spinner-style1 {
+  border-radius: 50%;
+  margin: -@base-line-height/2 0 0 -@base-line-height/2;
   width: @base-line-height;
   height: @base-line-height;
-  border: 0.25rem solid tint(@white, 0.2);
-  border-top-color: @white;
-  animation: spin @spin-duration infinite linear;
+  border: 4px solid tint(@color, 90%);
+  border-top-color: @color;
+}
+
+.loading-spinner-style2 {
+  margin: -@base-line-height 0 0 -@base-line-height;
+  width: @base-line-height*2;
+  height: @base-line-height*2;
+  box-shadow: 0 1px 0 @color;
+  background-color: transparent;
 }
