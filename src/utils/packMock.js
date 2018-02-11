@@ -1,8 +1,9 @@
 // http://www.wheresrhys.co.uk/fetch-mock/api
+// http://mockjs.com/
 import fetchMock from 'fetch-mock';
 import $$ from 'cmn-utils';
-// http://mockjs.com/
 import Mock from 'mockjs';
+import config from '@/config';
 const mock = Mock.mock;
 
 /**
@@ -12,6 +13,22 @@ const mock = Mock.mock;
  */
 const delay = (response, time) => {
   return () => $$.delay(time || Math.random() * 100).then(() => response)
+}
+
+// 模拟数据时包装反回数据
+const toSuccess = (response, time) => {
+  if (time) {
+    return delay(config.mock.toSuccess(response), time);
+  } else {
+    return config.mock.toSuccess(response);
+  }
+}
+const toError = (message, time) => {
+  if (time) {
+    return delay(config.mock.toError(message), time);
+  } else {
+    return config.mock.toError(message);
+  }
 }
 
 export default (...mocks) => {
@@ -27,7 +44,7 @@ export default (...mocks) => {
   mocks.forEach(mockFile => {
     let mockAPIs = {};
     if ($$.isFunction(mockFile)) {
-      mockAPIs = mockFile(fetchMock, delay, mock);
+      mockAPIs = mockFile({fetchMock, delay, mock, toSuccess, toError});
     } else if ($$.isObject(mockFile)) {
       mockAPIs = mockFile;
     } else {
