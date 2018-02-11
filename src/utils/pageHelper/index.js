@@ -27,7 +27,7 @@ export default class　PageHelper {
    * }))
   */
   static requestFormat(pageInfo) {
-    return config.pageHelper.requestFormat;
+    return config.pageHelper.requestFormat(pageInfo);
   };
    
 
