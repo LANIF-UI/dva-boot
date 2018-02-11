@@ -55,26 +55,55 @@ export default (model, options={}) => {
     effects: {
       // get old effect
       ...effects,
-      // append new request effect
+      /**
+       * payload 如果传入数组形式的payload，会合并结果后调用一次渲染
+       */
       * [REQUEST]({ payload }, { call, put }) {
-        /**
-         * valueField: 返回结果将使用valueField字段的值来接收
-         */
-        const {valueField, ...otherPayload} = payload;
+        let _payloads = [];
+        if ($$.isObject(payload)) {
+          _payloads.push(payload);
+        } else if ($$.isArray(payload)) {
+          _payloads = payload;
+        };
 
-        let response = yield call(asyncRequest, otherPayload);
+        const resultState = {
+          success: {},
+          error: {}
+        };
+        for (let i = 0; i < _payloads.length; i++) {
+          /**
+           * valueField: 返回结果将使用valueField字段的值来接收
+           */
+          const {valueField, ...otherPayload} = _payloads[i];
 
-        let isSuccess;
-        if (options && $$.isFunction(options.checkResponse)) {
-          isSuccess = options.checkResponse(response);
-        } else {
-          isSuccess = checkResponse(response);
+          let response = yield call(asyncRequest, otherPayload);
+
+          let isSuccess;
+          if (options && $$.isFunction(options.checkResponse)) {
+            isSuccess = options.checkResponse(response);
+          } else {
+            isSuccess = checkResponse(response);
+          }
+          
+          if (isSuccess) {
+            resultState.success[valueField] = response;
+          } else {
+            resultState.error[valueField] = response;
+          }
         }
-        
-        yield put({
-          type: isSuccess ? `${REQUEST_SUCCESS}` : `${REQUEST_ERROR}`,
-          payload: { [valueField]: response }
-        });
+
+        if (Object.keys(resultState.success).length) {
+          yield put({
+            type: REQUEST_SUCCESS,
+            payload: resultState.success
+          });
+        }
+        if (Object.keys(resultState.error).length) {
+          yield put({
+            type: REQUEST_ERROR,
+            payload: resultState.error
+          });
+        }
       },
     },
   
