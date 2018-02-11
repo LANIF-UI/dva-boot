@@ -37,9 +37,9 @@ export default {
     responseFormat: (resp) => {
       const { status, data, message } = resp;
       if (status) {
-        const { size, total, totalPages, list } = data;
+        const { pageNum, size, total, totalPages, list } = data;
         return {
-          size, total, totalPages, list
+          pageNum, size, total, totalPages, list
         }
       } else {
         throw new Error(message);
@@ -49,7 +49,7 @@ export default {
 
   // 路由加载效果
   router: {
-    loading: <PageLoading />
+    loading: <PageLoading loading />
   },
   
   /**

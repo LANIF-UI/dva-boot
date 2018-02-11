@@ -11,13 +11,13 @@ export default class PageInfo {
   pageSize = 10;
 
   // 当前页的数量
-  size = -1;
+  size = 0;
 
   // 总记录数
-  total = -1;
+  total = 0;
 
   // 总页数
-  totalPages = -1;
+  totalPages = 0;
 
   // 结果集
   list = [];
@@ -79,7 +79,7 @@ export default class PageInfo {
         this.pageNum ++;
       }
     } else {
-      this.pageNum = 1;
+      this.pageNum = this.totalPages;
     }
     return this;
   }
@@ -105,11 +105,12 @@ export default class PageInfo {
     }
     return $$.send(url, { data, ...options }).then(resp => {
       if ($$.isFunction(PageHelper.responseFormat)) {
-        const { size, total, totalPages, list } = PageHelper.responseFormat(resp);
+        const { pageNum, size, total, totalPages, list } = PageHelper.responseFormat(resp);
         self.size = size;
         self.total = total;
         self.totalPages = totalPages;
         self.list = list;
+        self.pageNum = pageNum;
         return self;
       }
     })
