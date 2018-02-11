@@ -53,13 +53,27 @@ export default (...mocks) => {
 
     for (const key in mockAPIs) {
       const method_url = key.split(" ");
-      // simle 'GET /api/getUserInfo'
+      
+      // 'GET /api/getUserInfo'
+      let method = 'mock';
+      let url = null;
       if (method_url.length === 2) {
-        const method = method_url[0].toLowerCase();
-        const url = method_url[1];
-        fetchMock[method](url, mockAPIs[key]);
+        method = method_url[0].toLowerCase();
+        url = method_url[1];
       } else {
-        fetchMock.mock(method_url[0], mockAPIs[key]);
+        url = method_url[0];
+      }
+
+      /**
+       * 如果想要针对请求时的参数，反回不同的数据，比如翻页
+       * 时解析body体里的页数，或查询条件，反回对应的数据，
+       * 这时可以把mock写成函数形式，这时会接收发送fetch时的
+       * options做为参数 fetch(url, options)
+       */
+      if ($$.isFunction(mockAPIs[key])) {
+        fetchMock[method](url, (url, options) => mockAPIs[key]({url, ...options}));
+      } else {
+        fetchMock[method](url, mockAPIs[key]);
       }
     }
   })

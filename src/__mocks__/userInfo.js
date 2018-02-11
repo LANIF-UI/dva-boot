@@ -28,21 +28,27 @@ export default ({fetchMock, delay, mock, toSuccess, toError}) => {
       { name: 'jonn' },
       { name: 'weiq' },
     ]),
-    // 表格带分页
-    '/api/userInfo/getList': () => toSuccess(mock({
-      'pageNum|+1': 1,                      // 递增加1
-      'pageSize': 10,
-      'size': 10,
-      'total': 500,
-      'totalPages': 50,
-      'list|10': [{
-        'id|+1': 1,
-        'name': '@cname',                   // 中文名称
-        'age|1-100': 100,                   // 100以内随机整数
-        'birthday': '@date("yyyy-MM-dd")',  // 日期
-        'city': '@city(true)',              // 中国城市
-        'phone': /^1[385][1-9]\d{8}/        // 手机号
-      }],
-    }))
+    // 表格带分页, 写成函数形式可以使用请求参数，
+    // 更真实的模拟后端数据处理业务
+    '/api/userInfo/getList': (options) => {
+      const body = JSON.parse(options.body);
+      const pageNum = body.pageNum;
+      const idbase = (pageNum - 1) * 10 + 1;
+      return toSuccess(mock({
+        'pageNum': pageNum,
+        'pageSize': 10,
+        'size': 10,
+        'total': 100,
+        'totalPages': 10,
+        'list|10': [{
+          'id|+1': idbase,
+          'name': '@cname',                   // 中文名称
+          'age|1-100': 100,                   // 100以内随机整数
+          'birthday': '@date("yyyy-MM-dd")',  // 日期
+          'city': '@city(true)',              // 中国城市
+          'phone': /^1[385][1-9]\d{8}/        // 手机号
+        }],
+      }), 400)
+    }
   } 
 }
