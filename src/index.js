@@ -1,31 +1,35 @@
 import React from 'react';
 import dva from 'dva';
 import { Router } from 'dva/router';
+import dynamic from 'dva/dynamic';
 import createLoading from 'dva-loading';
 import createHistory from 'history/createBrowserHistory';
+import request from 'cmn-utils/lib/request';
 import createRoutes from '@/routes';
 import 'assets/styles/index.less';
-import AppConfig from './AppConfig';
+import config from './config';
 
-// 1. 初始化
+// -> 初始化
 const app = dva({ history: createHistory() });
-new AppConfig(app);
 
-// 2. 插件
+// -> 插件
 app.use(createLoading());
+app.use({onError: config.exception.global});
+request.config(config.request);
+dynamic.setDefaultLoadingComponent(() => config.router.loading);
 
-// 3. 注册全局模型
+// -> 注册全局模型
 // app.model(require('./models/global').default);
 
-// 4. 初始化路由
+// -> 初始化路由
 app.router(({ history, app }) => (
   <Router history={history}>{createRoutes(app)}</Router>)
 );
 
-// 5. Start
+// -> Start
 app.start('#root');
 
-// 6. Developer mock data
+// -> Developer mock data
 if (process.env.NODE_ENV === 'development') {
   require('./__mocks__');
 }
