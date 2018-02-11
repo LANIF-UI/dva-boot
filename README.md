@@ -96,7 +96,7 @@ this.props.dispatch({
    })
    // {'string': '★★★★★★'} 
  */
-export default (fetchMock, delay, mock) => {
+export default ({fetchMock, delay, mock}) => {
   // 如果现有扩展不满足需求，可以直接使用fetchMock方法
   // fetchMock.mock(/httpbin.org\/post/, {/* response */}, {/* options */});
 
