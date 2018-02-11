@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import { PageLoading } from 'components';
 
-@connect(({userInfo}) => ({userInfo}))
+@connect(({userInfo, loading}) => ({userInfo, loading: loading.global}))
 export default class UserInfo extends Component {
   componentDidMount() {
     const {dispatch, userInfo} = this.props;
@@ -16,27 +17,38 @@ export default class UserInfo extends Component {
       }
     });
 
+    // 数组形式的payload
     dispatch({
       type: 'userInfo/@request',
-      payload: {
+      payload: [{
         valueField: 'httpbin',
         url: 'http://httpbin.org/get',
         method: 'GET', // default 'POST'
-      }
+      }, {
+        valueField: 'pageData',
+        url: '/api/userInfo/getList',
+        pageInfo: pageData.startPage(1, 10),
+      }]
     });
+  }
+
+  turnPage = (isPrevPage) => {
+    const {dispatch, userInfo} = this.props;
+    const {pageData} = userInfo;
 
     dispatch({
       type: 'userInfo/@request',
       payload: {
         valueField: 'pageData',
         url: '/api/userInfo/getList',
-        pageInfo: pageData.startPage(1, 10),
+        pageInfo: isPrevPage ? pageData.prevPage() : pageData.nextPage(),
       }
     });
   }
-  
+
   render() {
     const {info, httpbin, pageData} = this.props.userInfo;
+    const {pageNum, total, totalPages} = pageData;
     return (
       <div className="userinfo-page">
 
@@ -48,10 +60,11 @@ export default class UserInfo extends Component {
         <h2>异步数据（modelEnhance）</h2>
         <div>{JSON.stringify(httpbin)}</div>
 
-        <h2>分页助手（PageHelper）</h2>
+        <h2>分页助手（PageHelper）模拟真实请求</h2>
         <table style={{width: 800, textAlign: "left"}}>
           <thead>
             <tr>
+              <th></th>
               <th>姓名</th>
               <th>年龄</th>
               <th>生日</th>
@@ -62,6 +75,7 @@ export default class UserInfo extends Component {
           <tbody>
           {pageData.list.map(item => (
             <tr key={item.id}>
+              <td>{item.id}</td>
               <td>{item.name}</td>
               <td>{item.age}</td>
               <td>{item.birthday}</td>
@@ -71,6 +85,12 @@ export default class UserInfo extends Component {
           ))}
           </tbody>
         </table>
+        <div>
+          <button disabled={pageNum > 1 ? false : true} onClick={e => this.turnPage(true)}>上一页</button>&nbsp;
+          <button disabled={pageNum < totalPages ? false : true} onClick={e => this.turnPage()}>下一页</button>
+          当前为第<b>{pageNum}</b>页，总计<b>{total}</b>条数据,共<b>{totalPages}</b>页
+        </div>
+        <PageLoading loading={this.props.loading} />
       </div>
     )
   }
