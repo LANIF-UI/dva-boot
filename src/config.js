@@ -1,5 +1,6 @@
 import React from 'react';
-import { PageLoading } from '@/components';
+import { PageLoading, Notification } from '@/components';
+const notice = Notification.notice;
 
 /**
  * 应用配置 如请求格式，反回格式，异常处理方式，分页格式等
@@ -8,6 +9,22 @@ export default {
   // 异步请求配置
   request: {
     prefix: '',
+
+    /**
+     * 因为modelEnhance需要知道服务器反回的数据，
+     * 什么样的是成功，什么样的是失败，如
+     * {status: true, data: ...} // 代表成功
+     * {status: false, message: ...} // 代表失败
+     * 下面写法代表只要有反回就认为是成功，
+     * 实际中应该通过服务端反回的response中的
+     * 成功失败标识来进行区分
+     */
+    checkResponse: (response) => {
+      if (response) {
+        return true;
+      }
+      return false;
+    }
   },
 
   // 全局异常
@@ -20,6 +37,7 @@ export default {
       } else {
         console.error(err);
       }
+      notice(err.message, 'error');
     },
   },
 
