@@ -1,5 +1,6 @@
 import $$, {request} from 'cmn-utils';
 import PageInfo from './pageHelper/PageInfo';
+import config from '@/config';
 
 const REQUEST = '@request';
 const REQUEST_SUCCESS = '@request_success';
@@ -21,19 +22,6 @@ async function asyncRequest(payload) {
   }
 }
 
-/**
- * 简单通过判断是否有反回确定是成功或失败，
- * 实际中应该通过服务端反回的response中的
- * 成功失败标识来进行区分
- * @param {*} response 
- */
-function checkResponse(response) {
-  if (response) {
-    return true;
-  }
-  return false;
-}
-
 export const simpleModel = {
   namespace: $$.randomStr(4),
   enhance: true,
@@ -42,7 +30,7 @@ export const simpleModel = {
   reducers: {},
 };
 
-export default (model, options={}) => {
+export default (model) => {
   const {namespace, state, subscriptions, effects, reducers, enhance} = {...simpleModel, ...model};
 
   if (!enhance) {
@@ -77,15 +65,8 @@ export default (model, options={}) => {
           const {valueField, ...otherPayload} = _payloads[i];
 
           let response = yield call(asyncRequest, otherPayload);
-
-          let isSuccess;
-          if (options && $$.isFunction(options.checkResponse)) {
-            isSuccess = options.checkResponse(response);
-          } else {
-            isSuccess = checkResponse(response);
-          }
           
-          if (isSuccess) {
+          if (config.request.checkResponse(response)) {
             resultState.success[valueField] = response;
           } else {
             resultState.error[valueField] = response;
