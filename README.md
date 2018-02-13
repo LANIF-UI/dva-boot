@@ -98,7 +98,11 @@ this.props.dispatch({
 
 ### exception
 
-全局异常处理
+全局异常处理，我们可以在src/config.js的`exceptiion`中处理通用异常，这里共实就是dva的onError方法的入口，我们一般处理如登录超时，用户没有权限，或另种请求异常等，建议大家不同的异常可以单独包装成一个异常类进行分类处理，这样更容易维护以及调试。
+
+### config
+
+工程的配置文件
 
 ### fetch mock
 
