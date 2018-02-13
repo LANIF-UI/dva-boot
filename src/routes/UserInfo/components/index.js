@@ -46,6 +46,17 @@ export default class UserInfo extends Component {
     });
   }
 
+  throwRequestError = () => {
+    this.props.dispatch({
+      type: 'userInfo/@request',
+      payload: {
+        valueField: 'httpbin',
+        url: 'http://httpbin.org/post',
+        method: 'GET',
+      }
+    });
+  }
+
   render() {
     const {info, httpbin, pageData} = this.props.userInfo;
     const {pageNum, total, totalPages} = pageData;
@@ -90,6 +101,10 @@ export default class UserInfo extends Component {
           <button disabled={pageNum < totalPages ? false : true} onClick={e => this.turnPage()}>下一页</button>
           当前为第<b>{pageNum}</b>页，总计<b>{total}</b>条数据,共<b>{totalPages}</b>页
         </div>
+
+        <h2>全局异常捕获</h2>
+        <button onClick={this.throwRequestError}>点我生成一个异常</button>
+
         <PageLoading loading={this.props.loading} />
       </div>
     )

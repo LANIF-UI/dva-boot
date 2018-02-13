@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'dva';
 import { Switch, NavLink, routerRedux } from 'dva/router';
 import $$ from 'cmn-utils';
+import { Notification } from 'components';
 import './styles/basic.less';
 
 @connect()
@@ -26,6 +27,7 @@ export default class BasicLayout extends React.PureComponent {
         <Switch>
           {childRoutes}
         </Switch>
+        <Notification />
       </div>
     );
   }
