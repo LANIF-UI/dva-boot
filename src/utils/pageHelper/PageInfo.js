@@ -47,6 +47,19 @@ export default class PageInfo {
   }
 
   /**
+   * 组装分页信息
+   * @param {number} pageNum page number
+   * @param {number} pageSize page size
+   */
+  jumpPage(pageNum, pageSize) {
+    if (pageNum && pageNum <= this.totalPages) {
+      this.pageNum = pageNum;
+      if (pageSize) this.pageSize = pageSize;
+    }
+    return this;
+  }
+
+  /**
    * 拼接过滤条件
    * @param {object} q 过滤条件 {name: 'jonn', sex: 1}
    * @param {boolean} merge 是否将新条件与现有条件合并
@@ -73,9 +86,15 @@ export default class PageInfo {
     return this;
   }
 
-  nextPage() {
+  /**
+   * 下一页或指定页数
+   * @param {number} pageNum 
+   */
+  nextPage(pageNum) {
     if (this.totalPages !== -1) {
-      if (this.pageNum + 1 <= this.totalPages) {
+      if (pageNum && pageNum <= this.totalPages) {
+        this.pageNum = pageNum;
+      } else if (this.pageNum + 1 <= this.totalPages) {
         this.pageNum ++;
       }
     } else {
@@ -84,6 +103,9 @@ export default class PageInfo {
     return this;
   }
 
+  /**
+   * 上一页
+   */
   prevPage() {
     if (this.totalPages !== -1) {
       if (this.pageNum - 1 > 0) {
@@ -105,13 +127,8 @@ export default class PageInfo {
     }
     return $$.send(url, { data, ...options }).then(resp => {
       if ($$.isFunction(PageHelper.responseFormat)) {
-        const { pageNum, size, total, totalPages, list } = PageHelper.responseFormat(resp);
-        self.size = size;
-        self.total = total;
-        self.totalPages = totalPages;
-        self.list = list;
-        self.pageNum = pageNum;
-        return self;
+        const newPageInfo = PageHelper.responseFormat(resp);
+        return Object.assign(self, newPageInfo);
       }
     })
   }
