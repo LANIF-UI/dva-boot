@@ -67,9 +67,9 @@ export default (model) => {
           let response = yield call(asyncRequest, otherPayload);
           
           if (config.request.checkResponse(response)) {
-            resultState.success[valueField] = response;
+            resultState.success[valueField || '_@fake_'] = response;
           } else {
-            resultState.error[valueField] = response;
+            resultState.error[valueField || '_@fake_'] = response;
           }
         }
 
