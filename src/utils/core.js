@@ -3,6 +3,7 @@ import dynamic from 'dva/dynamic';
 import { Route, Switch, Redirect } from 'dva/router';
 import DocumentTitle from 'react-document-title';
 import assign from 'object-assign';
+import $$ from 'cmn-utils';
 /**
  * 生成动态组件
  * @param {*} app 
@@ -38,7 +39,7 @@ export const createRoutes = (app, routesConfig) => {
 export const createRoute = (app, routesConfig) => {
   const {component: Comp, path, indexRoute, title, ...otherProps} = routesConfig(app);
   const routeProps = assign({
-    key: path || randomStr(4),
+    key: path || $$.randomStr(4),
     render: props => (
       <DocumentTitle title={title}>
         <Comp routerData={otherProps} {...props} />
@@ -57,16 +58,3 @@ export const createRoute = (app, routesConfig) => {
   
   return <Route exact {...routeProps} />
 };
-
-/**
- * 生成指定位数的随机数
- * @param {*} x 
- */
-export const randomStr = (x) => {
-  let s = "";
-  while(s.length < x && x > 0){
-    let v = Math.random() < 0.5 ? 32 : 0;
-    s += String.fromCharCode(Math.round(Math.random() * ((122 - v) - (97 - v)) + (97 - v)));
-  }
-  return s;
-}
