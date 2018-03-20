@@ -62,13 +62,15 @@ export default (model) => {
           /**
            * valueField: 返回结果将使用valueField字段的值来接收
            */
-          const {valueField, ...otherPayload} = _payloads[i];
+          const {valueField, notice, ...otherPayload} = _payloads[i];
 
           let response = yield call(asyncRequest, otherPayload);
           
           if (config.request.checkResponse(response)) {
+            if (notice) config.notice.success(notice === true ? '操作成功' : notice[0], 'success');
             resultState.success[valueField || '_@fake_'] = response;
           } else {
+            if (notice) config.notice.error(notice === true ? '操作失败' : notice[1], 'error');
             resultState.error[valueField || '_@fake_'] = response;
           }
         }

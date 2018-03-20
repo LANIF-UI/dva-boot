@@ -42,6 +42,11 @@ class Notification extends PureComponent {
       message,
       type
     });
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+    this.timer = setTimeout(this.hideNotice, 3000);
   }
 
   hideNotice = () => {

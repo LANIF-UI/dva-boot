@@ -96,5 +96,15 @@ export default {
       status: false,
       message: message,
     }),
+  },
+  
+  /**
+   * 系统通知, 见modelEnhance.js,为了解耦
+   */
+  notice: {
+    success: (message) => notice(message, 'success'),
+    error: (message) => notice(message, 'error'),
+    warning: (message) => notice(message, 'warn'),
+    info: (message) => notice(message),
   }
 }
