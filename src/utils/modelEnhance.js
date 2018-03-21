@@ -45,8 +45,10 @@ export default (model) => {
       ...effects,
       /**
        * payload 如果传入数组形式的payload，会合并结果后调用一次渲染
+       * success 在dispatch结束后得到成功的回调
+       * error 在dispatch结束后得到失败的回调
        */
-      * [REQUEST]({ payload }, { call, put }) {
+      * [REQUEST]({ payload, success, error }, { call, put }) {
         let _payloads = [];
         if ($$.isObject(payload)) {
           _payloads.push(payload);
@@ -74,6 +76,14 @@ export default (model) => {
             resultState.error[valueField || '_@fake_'] = response;
           }
         }
+        // 可以用success得到成功回调
+        if (Object.keys(resultState.error).length === 0 && $$.isFunction(success)) {
+          success(resultState.success);
+        } 
+        // 可以用error得到失败回调
+        if (Object.keys(resultState.error).length !== 0 && $$.isFunction(error)) {
+          error(resultState.error);
+        } 
 
         if (Object.keys(resultState.success).length) {
           yield put({
