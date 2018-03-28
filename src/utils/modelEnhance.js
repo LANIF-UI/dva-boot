@@ -12,13 +12,19 @@ async function asyncRequest(payload) {
    * other中可以配置 method headers data 等参数
    */
   const {url, pageInfo, ...other} = payload;
-  let options = {...other};
 
   // 如果是分页查询
   if (pageInfo && pageInfo instanceof PageInfo) {
-    return pageInfo.send(url, options);
+    return pageInfo.send(url, other);
   } else {
-    return request.send(url, options);
+    switch(other.method && other.method.toLowerCase()) {
+      case 'getform':
+        return request.getform(url, other.data, other);
+      case 'postform':
+        return request.postform(url, other.data, other);
+      default:
+        return request.send(url, other);
+    }
   }
 }
 
@@ -69,18 +75,26 @@ export default (model) => {
           let response = yield call(asyncRequest, otherPayload);
           
           if (config.request.checkResponse(response)) {
+            // 增加通知功能
             if (notice) config.notice.success(notice === true ? '操作成功' : notice[0], 'success');
+            // 增加单个成功回调
+            if (otherPayload.success) {
+              otherPayload.success(response);
+            }
             resultState.success[valueField || '_@fake_'] = response;
           } else {
             if (notice) config.notice.error(notice === true ? '操作失败' : notice[1], 'error');
+            if (otherPayload.error) {
+              otherPayload.error(response);
+            }
             resultState.error[valueField || '_@fake_'] = response;
           }
         }
-        // 可以用success得到成功回调
+        // 增加所有成功回调
         if (Object.keys(resultState.error).length === 0 && $$.isFunction(success)) {
           success(resultState.success);
         } 
-        // 可以用error得到失败回调
+        // 增加所有失败回调
         if (Object.keys(resultState.error).length !== 0 && $$.isFunction(error)) {
           error(resultState.error);
         } 
