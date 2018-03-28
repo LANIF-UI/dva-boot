@@ -56,5 +56,5 @@ export const createRoute = (app, routesConfig) => {
     ]
   }
   
-  return <Route exact {...routeProps} />
+  return <Route {...routeProps} />
 };
