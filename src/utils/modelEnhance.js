@@ -13,18 +13,31 @@ async function asyncRequest(payload) {
    */
   const {url, pageInfo, ...other} = payload;
 
-  // 如果是分页查询
+  // 如果是分页查询 (格式化发送参数)
   if (pageInfo && pageInfo instanceof PageInfo) {
-    return pageInfo.send(url, other);
-  } else {
-    switch(other.method && other.method.toLowerCase()) {
-      case 'getform':
-        return request.getform(url, other.data, other);
-      case 'postform':
-        return request.postform(url, other.data, other);
-      default:
-        return request.send(url, other);
+    const { pageNum, pageSize, filters, sorts } = pageInfo;
+    let data = { pageNum, pageSize, filters, sorts };
+
+    if ($$.isFunction(config.pageHelper.requestFormat)) {
+      data = config.pageHelper.requestFormat(pageInfo);
     }
+    other.data = data;
+  }
+
+  const _promise = other.method 
+    ? request[other.method.toLowerCase()](url, other.data, other)
+    : request.send(url, other);
+
+  // 如果是分页查询（格式化反回结果）
+  if (pageInfo && pageInfo instanceof PageInfo) {
+    return _promise.then(resp => {
+      if ($$.isFunction(config.pageHelper.responseFormat)) {
+        const newPageInfo = config.pageHelper.responseFormat(resp);
+        return Object.assign(pageInfo, newPageInfo);
+      }
+    })
+  } else {
+    return _promise
   }
 }
 
@@ -66,49 +79,63 @@ export default (model) => {
           success: {},
           error: {}
         };
+      
         for (let i = 0; i < _payloads.length; i++) {
           /**
            * valueField: 返回结果将使用valueField字段的值来接收
            */
           const {valueField, notice, ...otherPayload} = _payloads[i];
 
-          let response = yield call(asyncRequest, otherPayload);
-          
-          if (config.request.checkResponse(response)) {
-            // 增加通知功能
-            if (notice) config.notice.success(notice === true ? '操作成功' : notice[0], 'success');
-            // 增加单个成功回调
+          try {
+            let response = yield call(asyncRequest, otherPayload);
+
+            // 如果需要回调
             if (otherPayload.success) {
               otherPayload.success(response);
             }
-            resultState.success[valueField || '_@fake_'] = response;
-          } else {
-            if (notice) config.notice.error(notice === true ? '操作失败' : notice[1], 'error');
-            if (otherPayload.error) {
-              otherPayload.error(response);
+            
+            // 如果需要通知功能
+            if (notice) {
+              config.notice.success(notice === true ? '操作成功' : notice[0], 'success');
             }
-            resultState.error[valueField || '_@fake_'] = response;
+
+            // 准备返回值
+            resultState.success[valueField || '_@fake_'] = response;
+          } catch(e) {
+            // 如果需要通知功能
+            if (notice) {
+              config.notice.error(notice === true ? (e.text || e.message) : notice[1], 'error');
+            }
+            
+            resultState.error['error'] = e;
+
+            // 如果需要内部回调
+            if ($$.isFunction(otherPayload.error)) {
+              otherPayload.error(e);
+            } else if ($$.isFunction(error)) {
+              error(e);
+            } 
+
+            // 通知reducer
+            yield put({
+              type: REQUEST_ERROR,
+              payload: resultState.error
+            });
+            // 如果出错提前终止
+            break;
           }
         }
-        // 增加所有成功回调
-        if (Object.keys(resultState.error).length === 0 && $$.isFunction(success)) {
-          success(resultState.success);
-        } 
-        // 增加所有失败回调
-        if (Object.keys(resultState.error).length !== 0 && $$.isFunction(error)) {
-          error(resultState.error);
-        } 
 
+        // 通知reducer
         if (Object.keys(resultState.success).length) {
+          // 如果需要回调
+          if ($$.isFunction(success)) {
+            success(resultState.success);
+          }
+
           yield put({
             type: REQUEST_SUCCESS,
             payload: resultState.success
-          });
-        }
-        if (Object.keys(resultState.error).length) {
-          yield put({
-            type: REQUEST_ERROR,
-            payload: resultState.error
           });
         }
       },
