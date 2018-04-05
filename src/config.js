@@ -18,7 +18,15 @@ export default {
      * 下面写法代表只要有反回就认为是成功，
      * 实际中应该通过服务端反回的response中的
      * 成功失败标识来进行区分, 使用throw new Error("错误信息");
-     * 来抛出错误
+     * 来抛出错误,例：
+     * afterResponse: (response) => {
+        const {status, data, message} = response; // 服务端通用反回格式
+        if (status) {
+          return data; // 直接反回实际需要的数据
+        } else {
+          throw new Error(message); 
+        }
+      }
      */
     afterResponse: (response) => {
       return response;
