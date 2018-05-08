@@ -22,8 +22,8 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
-    "cmn-utils": "^0.1.8",
-    "dva": "^2.1.0",
+    "cmn-utils": "^1.0.2",
+    "dva": "^2.2.3",
     "dva-loading": "^1.0.4",
     "react": "^16.2.0",
     "react-document-title": "^2.0.3",
