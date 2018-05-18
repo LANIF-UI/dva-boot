@@ -66,8 +66,9 @@ export default (model) => {
        * payload 如果传入数组形式的payload，会合并结果后调用一次渲染
        * success 在dispatch结束后得到成功的回调
        * error 在dispatch结束后得到失败的回调
+       * afterResponse 模拟reduce中的操作，可以让我们有机会处理反回的数据，不能有副作用的方法
        */
-      * [REQUEST]({ payload, success, error }, { call, put }) {
+      * [REQUEST]({ payload, success, error, afterResponse }, { call, put }) {
         let _payloads = [];
         if ($$.isObject(payload)) {
           _payloads.push(payload);
@@ -88,6 +89,12 @@ export default (model) => {
 
           try {
             let response = yield call(asyncRequest, otherPayload);
+
+            // 自已处理反回的数据，模拟reduce中的操作，这里不要写有副作用的函数
+            if ($$.isFunction(afterResponse)) {
+              let _r = afterResponse(response);
+              if (_r) response = _r;
+            }
 
             // 如果需要回调
             if (otherPayload.success) {
