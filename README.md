@@ -10,7 +10,7 @@
 * [Development](#development)
 * [Thank You](#thank-you)
 * [Demo](https://github.com/LANIF-UI/dva-boot-demo) 一些简单的例子
-* [DVA-BOOT-ADMIN](https://github.com/LANIF-UI/dva-boot-admin/) 一个后台管理系统（开发中）
+* [DVA-BOOT-ADMIN](https://github.com/LANIF-UI/dva-boot-admin/) 一个后台管理系统（开发中求关注）
 
 ## Project Structure
 ```
