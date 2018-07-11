@@ -43,6 +43,12 @@ export default class PageInfo {
   startPage(pageNum = 1, pageSize = 10) {
     this.pageNum = pageNum;
     this.pageSize = pageSize;
+    this.size = 0;
+    this.total = 0;
+    this.totalPages = 0;
+    this.list = [];
+    this.filters = {};
+    this.sorts = {};
     return this;
   }
 
@@ -117,6 +123,7 @@ export default class PageInfo {
     return this;
   }
 
+  // deprecate
   send(url, options) {
     const self = this;
     const { pageNum, pageSize, filters, sorts } = this;
