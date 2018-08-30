@@ -6,7 +6,17 @@ const REQUEST = '@request';
 const REQUEST_SUCCESS = '@request_success';
 const REQUEST_ERROR = '@request_error';
  
-async function asyncRequest(payload) {
+/**
+ * 封装service中的异步方法，如在model中使用
+   const url = '/getPageList';
+   const pageInfo = yield call(asyncRequest, {...payload, url});
+   yield put({
+     type: 'getPageListSuccess',
+     payload: pageInfo
+   });
+ * @param {*} payload 
+ */
+export async function asyncRequest(payload) {
   if (!payload || !payload.url) throw(new Error('payload require contains url opt'));
   /**
    * other中可以配置 method headers data 等参数
