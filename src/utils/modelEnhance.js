@@ -117,7 +117,9 @@ export default model => {
            * notice: 弹出通知
            * actionType: 如果存在actionType, 则表示自已处理reducer,值为 actionType + ('_SUCCESS' | '_ERROR')
            */
-          const { valueField, notice, actionType, ...otherPayload } = _payloads[i];
+          const { valueField, notice, actionType, ...otherPayload } = _payloads[
+            i
+          ];
 
           try {
             let response = yield call(asyncRequest, otherPayload);

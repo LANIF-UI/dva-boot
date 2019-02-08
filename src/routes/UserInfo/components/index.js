@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { PageLoading } from 'components';
+import PageLoading from 'components/Loading/PageLoading';
 
 @connect(({userInfo, loading}) => ({userInfo, loading: loading.global}))
 export default class UserInfo extends Component {
